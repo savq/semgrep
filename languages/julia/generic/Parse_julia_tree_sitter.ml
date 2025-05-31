@@ -181,10 +181,10 @@ let map_operator_exp (env : env) (x : CST.operator) : expr =
 let map_integer_literal (env : env) (x : CST.integer_literal) =
   let s, tok =
     match x with
-    | `Tok_0b_pat_1c3450e x -> (* binary *) str env x
-    | `Tok_0o_pat_c83427c x -> (* octal *) str env x
-    | `Tok_0x_pat_50ed65e x -> (* hexadecimal *) str env x
-    | `Pat_a25c544 x -> (* numeral *) str env x
+    | `Tok_0b_pat_f202b54 x -> (* binary *) str env x
+    | `Tok_0o_pat_659066a x -> (* octal *) str env x
+    | `Tok_0x_pat_8c03647 x -> (* hexadecimal *) str env x
+    | `Pat_1c66fba x -> (* numeral *) str env x
   in
   L (Int (Parsed_int.parse (s, tok))) |> G.e
 
@@ -209,21 +209,21 @@ let map_float_literal (env : env) (x : CST.float_literal) : expr =
   in
   let s, tok =
     match x with
-    | `Tok_dot_pat_a25c544_choice_pat_55159f5 x ->
+    | `Tok_dot_pat_1c66fba_choice_pat_55159f5 x ->
         (* Leading period dec + exponent *)
         let s, tok = str env x in
         (fix_string s, tok)
-    | `Pat_a25c544_imm_tok_dot_choice_pat_a25c544_choice_pat_55159f5 (v1, v2) ->
+    | `Pat_1c66fba_imm_tok_dot_choice_pat_1c66fba_choice_pat_55159f5 (v1, v2) ->
         (* Decimal base *)
         let s1, t1 = str env v1 in
         (* . and then more decimal, or exponent *)
         let s2, t2 = str env v2 in
         (fix_string (s1 ^ s2), Tok.combine_toks t1 [ t2 ])
-    | `Tok_pat_a25c544_pat_55159f5 x ->
+    | `Tok_pat_1c66fba_pat_55159f5 x ->
         (* Decimal and exponent *)
         let s, tok = str env x in
         (fix_string s, tok)
-    | `Tok_choice_0x_pat_50ed65e_choice_dot_choice_pat_50ed65e_pat_dd04cb4 x ->
+    | `Tok_choice_0x_pat_8c03647_choice_dot_choice_pat_8c03647_pat_dd04cb4 x ->
         (* 0x, with optional dot, and hex exponent *)
         (* This case is not safe to call `fix_string`! *)
         str env x

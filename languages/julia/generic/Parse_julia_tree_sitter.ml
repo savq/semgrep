@@ -164,6 +164,7 @@ let map_operator (env : env) (x : CST.operator) =
   | `Pipe_left_op tok -> (* pipe_left_operator *) str env tok
   | `Pipe_right_op tok -> (* pipe_right_operator *) str env tok
   | `Ellips_op tok -> (* ellipsis_operator *) str env tok
+  | `COLON tok -> (* ":" *) str env tok
   | `Plus_op tok -> (* plus_operator *) str env tok
   | `Times_op tok -> (* times_operator *) str env tok
   | `Rati_op tok -> (* rational_operator *) str env tok
@@ -1316,10 +1317,6 @@ and map_expression (env : env) (x : CST.expression) : expr =
               DotAccess (v1, v2, FDynamic base) |> G.e
           | None -> base)
       | `Op x -> map_operator_exp env x
-      | `COLON tok ->
-          (* For creating "symbols" for metaprogramming. *)
-          let t = (* ":" *) str env tok in
-          OtherExpr (t, []) |> G.e
       | `Begin tok ->
           (* "begin" *)
           (* what even is this I don't understand why why why *)

@@ -124,9 +124,6 @@ let map_imm_tok_colon (env : env) (tok : CST.imm_tok_colon) =
 let map_imm_tok_choice_bare (env : env) (tok : CST.imm_tok_choice_bare) =
   (* imm_tok_choice_bare *) str env tok
 
-let map_pat_4aee1e1 (env : env) (tok : CST.pat_4aee1e1) =
-  (* pattern ;+ *) token env tok
-
 let map_imm_tok_dot (env : env) (tok : CST.imm_tok_dot) =
   (* "." *) token env tok
 
@@ -135,10 +132,18 @@ let map_boolean_literal (env : env) (x : CST.boolean_literal) =
   | `True tok -> (* "true" *) L (Bool (true, token env tok)) |> G.e
   | `False tok -> (* "false" *) L (Bool (false, token env tok)) |> G.e
 
+(* TODO: How to turn list of tokens `[';', ';', ...]` into a single token `;;`? *)
+(* NOTE: The semicolon rule is for separating expressions in blocks,
+ * but also to separate expressions in multi-dimensional arrays.
+ *)
+let map_semicolon (env : env) ((v1, _v2) : CST.semicolon) =
+  let v1 = (* ";" *) token env v1 in
+  v1
+
 let map_terminator (env : env) (x : CST.terminator) =
   match x with
-  | `LF tok -> (* "\n" *) token env tok
-  | `Pat_4aee1e1 x -> map_pat_4aee1e1 env x
+  | `Pat_509ec78 x -> (* pattern \r?\n *) token env x
+  | `Semi x -> map_semicolon env x
 
 let map_terminator_opt (env : env) (x : CST.terminator option) =
   match x with
